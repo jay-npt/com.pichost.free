@@ -1,21 +1,409 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <meta charset="utf-8">
-  <title>Open My App</title>
-  <script>
-    function openApp() {
-      // Try to open app
-      window.location = "picapp://open";
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Pic Host Free — App Details</title>
 
-      // Fallback if app not installed
-      setTimeout(function() {
-        window.location = "https://pichostfree.vercel.app/com.pichost.free.apk"; // APK download link
-      }, 2000);
+  <!-- Tailwind + FontAwesome -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            'google-green': '#0f9d58',
+            'google-blue': '#1a73e8',
+            'google-gray': '#f8f9fa'
+          },
+          animation: { 'spin-slow': 'spin 1.5s linear infinite' }
+        }
+      }
     }
   </script>
+
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap');
+    body { font-family: 'Roboto', sans-serif; background:#f8f9fa; }
+    .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    .hide-scrollbar::-webkit-scrollbar { display:none; }
+    .transition-fast { transition: all .18s ease; }
+    .modal { transition: opacity .22s ease; }
+  </style>
 </head>
-<body onload="openApp()">
-  <h2>Opening App...</h2>
+<body class="min-h-screen">
+
+  <!-- Header -->
+  <header class="bg-white shadow sticky top-0 z-30">
+    <div class="max-w-2xl mx-auto px-4 py-3 flex items-center">
+      <button onclick="history.back()" class="p-2 rounded-md hover:bg-gray-100"><i class="fas fa-arrow-left text-gray-600"></i></button>
+      <h1 class="text-lg font-medium text-gray-800 ml-3">App Details</h1>
+    </div>
+  </header>
+
+  <!-- Main -->
+  <main class="max-w-2xl mx-auto px-4 py-6">
+
+    <!-- App card -->
+    <section class="bg-white rounded-2xl shadow-sm p-6">
+      <div class="flex items-start">
+        <img id="appIcon" src="/icon.png" alt="Icon" class="w-20 h-20 rounded-xl shadow-md object-cover">
+        <div class="ml-4 flex-1">
+          <div class="flex items-center justify-between">
+            <div>
+              <h2 class="text-xl font-semibold text-gray-800">Pic Host Free</h2>
+              <p class="text-gray-600">PicHost Developers</p>
+              <div class="flex items-center mt-2">
+                <div class="text-yellow-400 mr-2">
+                  <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star-half-alt"></i>
+                </div>
+                <span class="text-blue-500 font-medium">4.5</span>
+                <span class="text-gray-500 ml-2">(12,345)</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Install area -->
+      <div class="mt-6">
+        <div class="flex gap-3">
+          <button id="installBtn" class="flex-1 bg-google-green text-white font-medium py-3 rounded-full shadow-md flex items-center justify-center gap-3 transition-fast">
+            <span id="buttonText">Install</span>
+            <i id="btnSpinner" class="fas fa-spinner animate-spin-slow hidden"></i>
+          </button>
+
+          <button id="cancelBtn" class="bg-gray-200 text-gray-700 font-medium py-3 px-4 rounded-full shadow-md hidden">
+            Cancel
+          </button>
+        </div>
+
+        <!-- Progress -->
+        <div id="progressWrap" class="mt-4 hidden">
+          <div class="flex justify-between text-sm text-gray-600 mb-2">
+            <span id="progressLabel">Downloading…</span>
+            <span id="progressPercent">0%</span>
+          </div>
+          <div class="w-full h-2 bg-gray-200 rounded-full overflow-hidden">
+            <div id="progressBar" class="h-full bg-gradient-to-r from-google-blue to-google-green w-0"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Screenshots -->
+    <section class="bg-white rounded-2xl shadow-sm p-5 mt-6">
+      <h3 class="text-lg font-medium text-gray-800 mb-4">Screenshots</h3>
+      <div class="flex space-x-4 overflow-x-auto hide-scrollbar pb-3 snap-x">
+        <div class="flex-shrink-0 w-64 snap-start">
+          <img src="/scr1.png" alt="Screenshot 1" class="rounded-lg shadow-md object-cover w-full h-96">
+        </div>
+        <div class="flex-shrink-0 w-64 snap-start">
+          <img src="/scr2.png" alt="Screenshot 2" class="rounded-lg shadow-md object-cover w-full h-96">
+        </div>
+        <div class="flex-shrink-0 w-64 snap-start">
+          <img src="/scr3.png" alt="Screenshot 3" class="rounded-lg shadow-md object-cover w-full h-96">
+        </div>
+      </div>
+    </section>
+
+    <!-- About -->
+    <section class="bg-white rounded-2xl shadow-sm p-6 mt-6">
+      <h3 class="text-lg font-medium text-gray-800 mb-3">About this app</h3>
+      <p class="text-gray-700">
+        Free image hosting — Fast and secure. Privacy protected: we do not collect personal data or request unnecessary permissions.
+        Play Protect verified, no 3rd-party ads or adult content. Images are hosted on Imgbb.
+      </p>
+    </section>
+
+    <!-- Features -->
+    <section class="bg-white rounded-2xl shadow-sm p-6 mt-6">
+      <h3 class="text-lg font-medium text-gray-800 mb-4">Features</h3>
+      <ul class="space-y-3">
+        <li class="flex items-center"><i class="fas fa-check-circle text-google-green mr-3"></i> Free image hosting</li>
+        <li class="flex items-center"><i class="fas fa-check-circle text-google-green mr-3"></i> Fast and secure</li>
+        <li class="flex items-center"><i class="fas fa-check-circle text-google-green mr-3"></i> Privacy protected</li>
+        <li class="flex items-center"><i class="fas fa-check-circle text-google-green mr-3"></i> No permissions required</li>
+        <li class="flex items-center"><i class="fas fa-check-circle text-google-green mr-3"></i> No data collection</li>
+        <li class="flex items-center"><i class="fas fa-check-circle text-google-green mr-3"></i> Play Protect verified</li>
+        <li class="flex items-center"><i class="fas fa-check-circle text-google-green mr-3"></i> No ads / 18+ content</li>
+      </ul>
+    </section>
+
+    <!-- Additional info -->
+    <section class="bg-white rounded-2xl shadow-sm p-6 mt-6">
+      <h3 class="text-lg font-medium text-gray-800 mb-4">Additional Information</h3>
+      <div class="grid grid-cols-2 gap-4 text-sm text-gray-700">
+        <div><p class="text-gray-500">Updated</p><p>August 15, 2023</p></div>
+        <div><p class="text-gray-500">Size</p><p>~5.2 MB</p></div>
+        <div><p class="text-gray-500">Downloads</p><p>100,000+</p></div>
+        <div><p class="text-gray-500">Version</p><p>1.2.3</p></div>
+        <div><p class="text-gray-500">Requires Android</p><p>8.0 and up</p></div>
+        <div><p class="text-gray-500">Content Rating</p><p>3+</p></div>
+      </div>
+    </section>
+
+    <!-- Footer links -->
+    <div class="text-center mt-6 space-x-6 text-sm">
+      <button id="privacyBtn" class="text-google-blue hover:underline">Privacy Policy</button>
+      <button id="termsBtn" class="text-google-blue hover:underline">Terms & Conditions</button>
+    </div>
+
+  </main>
+
+  <!-- Privacy Modal -->
+  <div id="privacyModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50 opacity-0 pointer-events-none">
+    <div class="bg-white rounded-xl shadow-2xl max-w-3xl w-full max-h-[80vh] overflow-y-auto">
+      <div class="p-6">
+        <div class="flex justify-between items-center mb-4">
+          <h3 class="text-xl font-bold text-gray-800">Privacy Policy</h3>
+          <button id="closePrivacy" class="text-gray-500 hover:text-gray-700"><i class="fas fa-times"></i></button>
+        </div>
+        <div class="prose max-w-none text-gray-700">
+          <p><strong>Last updated:</strong> August 15, 2023</p>
+          <p>We do not collect personal information. All images are stored on Imgbb's secure servers (as stated). For full details we follow Imgbb's privacy practices where applicable.</p>
+          <p>We may update this page from time to time. If you have privacy questions, contact us.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Terms Modal -->
+  <div id="termsModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50 opacity-0 pointer-events-none">
+    <div class="bg-white rounded-xl shadow-2xl max-w-3xl w-full max-h-[80vh] overflow-y-auto">
+      <div class="p-6">
+        <div class="flex justify-between items-center mb-4">
+          <h3 class="text-xl font-bold text-gray-800">Terms & Conditions</h3>
+          <button id="closeTerms" class="text-gray-500 hover:text-gray-700"><i class="fas fa-times"></i></button>
+        </div>
+        <div class="prose max-w-none text-gray-700">
+          <p><strong>Last updated:</strong> August 15, 2023</p>
+          <p>Please read terms carefully. By using the Service you agree to these terms. Content may be removed if it violates policy. We are not responsible for third-party content linked or hosted on Imgbb.</p>
+          <h4>Account & Content</h4>
+          <p>When you create an account, provide accurate info. You are responsible for content you upload.</p>
+          <h4>Termination</h4>
+          <p>We may terminate or suspend accounts for policy violations.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+<script>
+(function(){
+  // CONFIG — change only these paths if you host somewhere else
+  const DEEP_LINK = 'picapp://open';
+  const APK_URL = 'https://pichostfree.vercel.app/com.pichost.free.apk'; // <-- user's APK link
+  const APK_FILENAME = 'com.pic.host.free.apk';
+  const ICON_PATH = '/icon.png';
+  const SCR1 = '/scr1.png';
+  const SCR2 = '/scr2.png';
+  const SCR3 = '/scr3.png';
+
+  // Elements
+  const installBtn = document.getElementById('installBtn');
+  const cancelBtn = document.getElementById('cancelBtn');
+  const buttonText = document.getElementById('buttonText');
+  const btnSpinner = document.getElementById('btnSpinner');
+  const progressWrap = document.getElementById('progressWrap');
+  const progressBar = document.getElementById('progressBar');
+  const progressPercent = document.getElementById('progressPercent');
+  const progressLabel = document.getElementById('progressLabel');
+  const privacyBtn = document.getElementById('privacyBtn');
+  const termsBtn = document.getElementById('termsBtn');
+  const privacyModal = document.getElementById('privacyModal');
+  const termsModal = document.getElementById('termsModal');
+  const closePrivacy = document.getElementById('closePrivacy');
+  const closeTerms = document.getElementById('closeTerms');
+  const appIcon = document.getElementById('appIcon');
+
+  // apply local assets (if available)
+  appIcon.src = ICON_PATH;
+  // screenshots already set in HTML to /scr1.png etc
+
+  let downloadController = null;
+  let downloadedBlob = null;
+  let downloadInProgress = false;
+  let appOpened = false;
+
+  // Try to open the app quickly. If the page becomes hidden, assume app opened.
+  function tryOpenAppThenMaybeDownload() {
+    const start = Date.now();
+
+    // Listen for visibilitychange — if hidden, assume app opened
+    function onVisibility() {
+      if (document.hidden) {
+        appOpened = true;
+        cleanup();
+      }
+    }
+    document.addEventListener('visibilitychange', onVisibility);
+
+    // Attempt open
+    window.location = DEEP_LINK;
+
+    // After short delay (500ms), if page still visible, start fallback download
+    setTimeout(() => {
+      document.removeEventListener('visibilitychange', onVisibility);
+      if (!appOpened) {
+        initAutoDownload(); // start download flow
+      } else {
+        // app opened — do nothing
+        cleanup();
+      }
+    }, 500);
+  }
+
+  // download with streaming & progress
+  async function initAutoDownload() {
+    if (downloadInProgress || downloadedBlob) return;
+    downloadInProgress = true;
+    buttonText.textContent = 'Downloading';
+    btnSpinner.classList.remove('hidden');
+    cancelBtn.classList.remove('hidden');
+    progressWrap.classList.remove('hidden');
+    progressBar.style.width = '0%';
+    progressPercent.textContent = '0%';
+    progressLabel.textContent = 'Downloading…';
+
+    downloadController = new AbortController();
+    const signal = downloadController.signal;
+
+    try {
+      const resp = await fetch(APK_URL, { signal });
+      if (!resp.ok) throw new Error('Network response not ok: ' + resp.status);
+
+      const contentLength = resp.headers.get('Content-Length');
+      const total = contentLength ? parseInt(contentLength, 10) : NaN;
+
+      const reader = resp.body.getReader();
+      const chunks = [];
+      let received = 0;
+
+      while(true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+        chunks.push(value);
+        received += value.length || value.byteLength || value.length;
+
+        if (!isNaN(total)) {
+          const percent = Math.round((received / total) * 100);
+          progressBar.style.width = percent + '%';
+          progressPercent.textContent = percent + '%';
+        } else {
+          // unknown total — show indeterminate animation by toggling width
+          const pseudo = Math.min(95, Math.round((Math.log(received+1)/10)*100));
+          progressBar.style.width = pseudo + '%';
+          progressPercent.textContent = pseudo + '%';
+        }
+      }
+
+      // assemble blob
+      downloadedBlob = new Blob(chunks, { type: 'application/vnd.android.package-archive' });
+      progressBar.style.width = '100%';
+      progressPercent.textContent = '100%';
+      downloadInProgress = false;
+      buttonText.textContent = 'Install Now';
+      btnSpinner.classList.add('hidden');
+
+    } catch (err) {
+      if (err.name === 'AbortError') {
+        // cancelled
+        progressLabel.textContent = 'Download cancelled';
+      } else {
+        console.error(err);
+        progressLabel.textContent = 'Download failed — retrying soon...';
+        btnSpinner.classList.add('hidden');
+        buttonText.textContent = 'Download Failed';
+        // retry after a pause
+        setTimeout(() => {
+          resetDownloadUI();
+          initAutoDownload();
+        }, 5000);
+      }
+      downloadInProgress = false;
+    }
+  }
+
+  function cancelDownload() {
+    if (downloadController) downloadController.abort();
+    resetDownloadUI();
+  }
+
+  function resetDownloadUI() {
+    downloadedBlob = null;
+    downloadController = null;
+    downloadInProgress = false;
+    buttonText.textContent = 'Install';
+    btnSpinner.classList.add('hidden');
+    cancelBtn.classList.add('hidden');
+    progressWrap.classList.add('hidden');
+    progressBar.style.width = '0%';
+    progressPercent.textContent = '0%';
+    progressLabel.textContent = '';
+  }
+
+  function triggerInstallFromBlob() {
+    if (!downloadedBlob) return;
+    // Create blob url and trigger anchor click to start save/open
+    const url = URL.createObjectURL(downloadedBlob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = APK_FILENAME; // suggest filename
+    document.body.appendChild(a);
+    a.click();
+    setTimeout(() => {
+      URL.revokeObjectURL(url);
+      document.body.removeChild(a);
+      // After download, browser may show install prompt in notification tray or Downloads.
+      // User must tap the APK file to install (browser security prevents auto-install).
+    }, 200);
+  }
+
+  function cleanup() {
+    // When app opened, we don't need to continue downloads
+    if (downloadController) downloadController.abort();
+    resetDownloadUI();
+  }
+
+  // Button handlers
+  installBtn.addEventListener('click', () => {
+    if (downloadedBlob) {
+      triggerInstallFromBlob();
+    } else if (!downloadInProgress) {
+      // user pressed Install before auto-download started — start it
+      initAutoDownload();
+    } // if in progress, clicking does nothing (spinner shows)
+  });
+
+  cancelBtn.addEventListener('click', cancelDownload);
+
+  // Modals
+  privacyBtn.addEventListener('click', () => {
+    privacyModal.classList.remove('opacity-0', 'pointer-events-none');
+    privacyModal.classList.add('opacity-100');
+  });
+  termsBtn.addEventListener('click', () => {
+    termsModal.classList.remove('opacity-0', 'pointer-events-none');
+    termsModal.classList.add('opacity-100');
+  });
+  closePrivacy.addEventListener('click', () => {
+    privacyModal.classList.add('opacity-0', 'pointer-events-none');
+  });
+  closeTerms.addEventListener('click', () => {
+    termsModal.classList.add('opacity-0', 'pointer-events-none');
+  });
+  window.addEventListener('click', (e) => {
+    if (e.target === privacyModal) privacyModal.classList.add('opacity-0', 'pointer-events-none');
+    if (e.target === termsModal) termsModal.classList.add('opacity-0', 'pointer-events-none');
+  });
+
+  // Kick off: try open app quickly then fallback to download
+  tryOpenAppThenMaybeDownload();
+
+})();
+</script>
+
 </body>
-</html>
+  </html>
